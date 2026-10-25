@@ -70,4 +70,56 @@ db.Orders.AddRange(
 db.SaveChanges();
 Console.WriteLine("Шаг 3");
 Console.WriteLine("Покупатели, товары и заказы добавлены");
-// DateTime.Now возвращает местное время, UtcNow возвращает время UTC
+// Now возвращает местное время, UtcNow возвращает время UTC
+
+//Шаг 4
+Console.WriteLine("Шаг 4");
+
+// Покупатели из Омска по алфавиту
+var omsk = db.Customers
+    .Where(c => c.City == "Омск")
+    .OrderBy(c => c.Name)
+    .ToList();
+foreach (var c in omsk)
+    Console.WriteLine($"{c.Name}, {c.Phone}");
+
+// Товары дешевле 100 рублей
+Console.WriteLine("Товары дешевле 100 рублей:");
+
+var cheap = db.Products
+    .Where(p => p.Price < 100m)
+    .OrderBy(p => p.Price)
+    .ToList();
+foreach (var p in cheap)
+    Console.WriteLine($"{p.Name} - {p.Price} руб.");
+
+// Количество товаров на складе
+int count = db.Products.Count(p => p.Stock > 0);
+Console.WriteLine($"Видов товаров на складе: {count}");
+
+// Три самых дорогих товара
+Console.WriteLine("Три самых дорогих товара:");
+
+var expensive = db.Products
+    .OrderByDescending(p => p.Price)
+    .Take(3)
+    .ToList();
+foreach (var p in expensive)
+    Console.WriteLine($"{p.Name} - {p.Price} руб.");
+
+// УСЛОЖНЕНИЕ
+
+Console.WriteLine("Все заказы:");
+var orders = db.Orders
+    .Include(o => o.Customer)
+    .Include(o => o.Product)
+    .ToList();
+decimal revenue = 0;
+
+foreach (var order in orders)
+{
+    decimal total = order.Product.Price * order.Quantity;
+    Console.WriteLine($"{order.Customer.Name} - {order.Product.Name} - {order.Quantity} шт. - {total} руб.");
+    revenue += total;
+}
+Console.WriteLine($"Общая выручка: {revenue} руб.");
