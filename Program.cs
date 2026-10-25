@@ -123,3 +123,53 @@ foreach (var order in orders)
     revenue += total;
 }
 Console.WriteLine($"Общая выручка: {revenue} руб.");
+
+//Шаг 5
+Console.WriteLine("Шаг 5");
+
+// Измена телефона Ивана
+var customer = db.Customers.First(c => c.Name == "Иван Петров");
+customer.Phone = "+7 900 999-00-00";
+db.SaveChanges();
+
+// Увеличение цены на 10%
+var allProducts = db.Products.ToList();
+foreach (var product in allProducts)
+{
+    product.Price *= 1.1m;
+}
+
+// Сувенирные спички закончились
+souvenir.Stock = 0;
+db.SaveChanges();
+Console.WriteLine("Цены и остатки обновлены");
+
+// УСЛОЖНЕНИЕ
+
+void MakeOrder(Customer buyer, Product item, int quantity)
+{
+    if (quantity <= 0 || item.Stock < quantity)
+    {
+        Console.WriteLine("Недостаточно на складе");
+        return;
+    }
+
+    db.Orders.Add(new Order
+    {
+        Customer = buyer,
+        Product = item,
+        Quantity = quantity,
+        CreatedAt = DateTime.UtcNow
+    });
+
+    item.Stock -= quantity;
+    db.SaveChanges();
+    Console.WriteLine("Заказ оформлен");
+}
+
+// Успешный заказ
+MakeOrder(sergey, fireplace, 2);
+
+// Неуспешный заказ
+MakeOrder(sergey, fireplace, 1000);
+// Заказ и остаток сохраняется одним сейвом чтобы оба изменения выполнились вместе иначе товар можно списать без сохранения заказа
