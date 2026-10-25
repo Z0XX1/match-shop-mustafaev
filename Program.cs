@@ -14,3 +14,60 @@ Console.WriteLine("Таблицы созданы");
 //Шаг 2
 Console.WriteLine("Шаг 2");
 Console.WriteLine("Таблица заказов создана");
+
+//Шаг 3
+var ivan = new Customer { Name = "Иван Петров", Phone = "+7 900 111-22-33", City = "Омск" };
+var olga = new Customer { Name = "Ольга Смирнова", Phone = "+7 900 444-55-66", City = "Томск" };
+var maria = new Customer { Name = "Мария Иванова", Phone = "+7 901 123-45-67", City = "Владивосток" };
+var dmitry = new Customer { Name = "Дмитрий Соколов", Phone = "+7 902 234-56-78", City = "Москва" };
+var sergey = new Customer { Name = "Сергей Волков", Phone = "+7 903 345-67-89", City = "Казань" };
+
+db.Customers.AddRange(ivan, olga, maria, dmitry, sergey);
+
+var domestic = new Product { Name = "Хозяйственные", Price = 45m, MatchesPerBox = 40, Stock = 120 };
+var tourist = new Product { Name = "Туристические", Price = 89m, MatchesPerBox = 20, Stock = 40, Description = "Не боятся влаги" };
+var fireplace = new Product { Name = "Каминные", Price = 150m, MatchesPerBox = 30, Stock = 10 };
+var hunting = new Product { Name = "Охотничьи", Price = 230m, MatchesPerBox = 15, Stock = 25 };
+var souvenir = new Product { Name = "Сувенирные", Price = 300m, MatchesPerBox = 10, Stock = 5 };
+
+db.Products.AddRange(domestic, tourist, fireplace, hunting, souvenir);
+db.SaveChanges();
+
+db.Orders.AddRange(
+    new Order
+    {
+        Customer = ivan,
+        Product = fireplace,
+        Quantity = 3,
+        CreatedAt = DateTime.UtcNow.AddDays(-6)
+    },
+
+    new Order
+    {
+        Customer = ivan,
+        Product = domestic,
+        Quantity = 4,
+        CreatedAt = DateTime.UtcNow.AddDays(-5)
+    },
+
+    new Order
+    {
+        Customer = maria,
+        Product = tourist,
+        Quantity = 2,
+        CreatedAt = DateTime.UtcNow.AddDays(-4)
+    },
+
+    new Order
+    {
+        Customer = dmitry,
+        Product = hunting,
+        Quantity = 1,
+        CreatedAt = DateTime.UtcNow.AddDays(-3)
+    }
+);
+
+db.SaveChanges();
+Console.WriteLine("Шаг 3");
+Console.WriteLine("Покупатели, товары и заказы добавлены");
+// DateTime.Now возвращает местное время, UtcNow возвращает время UTC
