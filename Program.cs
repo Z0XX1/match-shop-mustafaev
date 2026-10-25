@@ -173,3 +173,33 @@ MakeOrder(sergey, fireplace, 2);
 // Неуспешный заказ
 MakeOrder(sergey, fireplace, 1000);
 // Заказ и остаток сохраняется одним сейвом чтобы оба изменения выполнились вместе иначе товар можно списать без сохранения заказа
+
+//Шаг 6
+Console.WriteLine("Шаг 6");
+
+// Удаление ольги
+var leaving = db.Customers.First(c => c.Name == "Ольга Смирнова");
+db.Customers.Remove(leaving);
+db.SaveChanges();
+
+// Удаление товаров с нулевым остатком
+var emptyProducts = db.Products
+    .Where(p => p.Stock == 0)
+    .ToList();
+
+db.Products.RemoveRange(emptyProducts);
+db.SaveChanges();
+Console.WriteLine($"Осталось товаров: {db.Products.Count()}");
+
+// УСЛОЖНЕНИЕ
+
+// У Ивана есть два заказа
+var buyer = db.Customers.First(c => c.Name == "Иван Петров");
+int before = db.Orders.Count(o => o.CustomerId == buyer.Id);
+db.Customers.Remove(buyer);
+db.SaveChanges();
+int after = db.Orders.Count(o => o.CustomerId == buyer.Id);
+Console.WriteLine($"Заказов до удаления: {before}");
+Console.WriteLine($"Заказов после удаления: {after}");
+
+// Заказы ивана тоже удалились из-за каскадного удаления, это происходит из-за обязательной связи CustomerId и для магазина эт плохо т.к теряется история покупок
