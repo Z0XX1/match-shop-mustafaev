@@ -10,3 +10,7 @@ db.Database.EnsureCreated();
 
 Console.WriteLine("Шаг 1");
 Console.WriteLine("Таблицы созданы");
+
+//Шаг 2
+Console.WriteLine("Шаг 2");
+Console.WriteLine("Таблица заказов создана");

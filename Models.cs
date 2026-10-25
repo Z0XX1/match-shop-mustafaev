@@ -17,3 +17,17 @@ public class Product
     public int Stock { get; set; }
     public string? Description { get; set; } // Name обязателен а Desc может быть NULL потому-что его тип string? допускает отсутствие значения
 }
+
+public class Order
+{
+    public int Id { get; set; }
+    public int Quantity { get; set; }
+
+    public int CustomerId { get; set; }
+    public Customer Customer { get; set; } = null!;
+
+    public int ProductId { get; set; }
+    public Product Product { get; set; } = null!;
+
+    public DateTime CreatedAt { get; set; } // DateTime хранит дату и время, в postgre эот timestamp with time zone
+}
